@@ -56,7 +56,7 @@ RegisterCommand(
 
     log('putting ped...')
 
-    let pedHash = GetHashKey('s_f_y_cop_01')
+    let pedHash = GetHashKey('u_m_y_tattoo_01')
 
     RequestModel(pedHash)
 
@@ -80,7 +80,7 @@ RegisterCommand(
     let ped = CreatePedInsideVehicle(selectedEntity, 4, pedHash, -1, true, true)
 
     SetBlockingOfNonTemporaryEvents(ped)
-    TaskVehicleDriveWander(ped, selectedEntity, 35, 2883621)
+    TaskVehicleDriveWander(ped, selectedEntity, 120, 2884156)
 
     log('put ped in veh')
   },
@@ -122,7 +122,7 @@ function _focusOn() {
     )
   }
 
-  PointCamAtEntity(cam, selectedEntity, 0.0, 0.0, -0.2, false)
+  PointCamAtEntity(cam, selectedEntity, 0.0, 0.0, 0, true)
   SetCamFov(cam, 40)
 
   if (t_UpdateCamPos != null) clearTick(t_UpdateCamPos)
@@ -130,11 +130,11 @@ function _focusOn() {
 
   SetCamActive(cam, true)
   RenderScriptCams(true, 1, 500, true, false, false)
-  AnimpostfxPlay('ChopVision', 0, true)
+  //AnimpostfxPlay('ChopVision', 0, true)
 }
 
 const radius = 25
-const heightLift = 12
+const heightLift = 8
 function updateCam() {
   let [px, py, pz] = GetEntityCoords(GetPlayerPed(-1), false)
   let [ex, ey, ez] = GetEntityCoords(selectedEntity, false)
@@ -145,15 +145,25 @@ function updateCam() {
 
   let camPosX = px + Sin(anglePane) * radius,
     camPosY = py + Cos(anglePane) * radius,
-    camPosZ = pz + Sin(angleAlt) * heightLift * 2
+    camPosZ = pz + Sin(angleAlt) * radius
 
-  camPosX -= Cos(eRot + 90) * Cos(angleAlt) * 2
-  camPosY -= Sin(eRot + 90) * Cos(angleAlt) * 2
+  camPosX -= Cos(eRot + 90) * Cos(angleAlt)
+  camPosY -= Sin(eRot + 90) * Cos(angleAlt)
 
-  console.log({ px, py, pz, anglePane, angleAlt, camPosX, camPosY, camPosZ })
+  console.log({
+    px,
+    py,
+    pz,
+    heightLift,
+    anglePane,
+    angleAlt,
+    camPosX,
+    camPosY,
+    camPosZ,
+  })
 
-  SetCamCoord(cam, camPosX, camPosY, pz + heightLift)
-  console.log(GetCamCoord(cam))
+  SetCamCoord(cam, camPosX, camPosY, camPosZ + heightLift)
+  //console.log({ coord: GetCamCoord(cam), rot: GetCamRot(cam) })
 
   // add controls for FOV
 }
@@ -171,7 +181,7 @@ function _focusOff() {
   t_UpdateCamPos = null
 
   //SetNightvision(false)
-  AnimpostfxStop('ChopVision')
+  //AnimpostfxStop('ChopVision')
   RenderScriptCams(false, 1, 500, true, false, false)
 }
 
